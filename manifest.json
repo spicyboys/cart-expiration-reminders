@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "HEB Cart Scraper",
+  "version": "1.0",
+  "description": "Collects items from the H-E-B cart and displays them in the extension popup.",
+  "permissions": [
+    "identity",
+    "identity.email",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.heb.com/cart*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "View Cart Items"
+  },
+  "oauth2": {
+    "client_id": "895811675955-9bnhe2gfkbck2sd92igav5n2bsafev01.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/tasks"
+    ]
+  }
+}
