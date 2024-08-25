@@ -1,46 +1,56 @@
 // background.js
 
 let cartItems = [];
+let shelfLifeData = [];
 
-const shelfLifeData = [
-  { class: "Fruit & Vegetable", subClass: "Apples", minShelfLife: 30, maxShelfLife: 60 },
-  { class: "Fruit & Vegetable", subClass: "Bananas", minShelfLife: 5, maxShelfLife: 7 },
-  { class: "Fruit & Vegetable", subClass: "Berries & Cherries", minShelfLife: 3, maxShelfLife: 7 },
-  { class: "Fruit & Vegetable", subClass: "Leafy Greens (Lettuce, Spinach)", minShelfLife: 3, maxShelfLife: 5 },
-  { class: "Fruit & Vegetable", subClass: "Root Vegetables (Carrots, Potatoes)", minShelfLife: 30, maxShelfLife: 60 },
-  { class: "Fruit & Vegetable", subClass: "Tomatoes", minShelfLife: 7, maxShelfLife: 10 },
-  { class: "Dairy & Eggs", subClass: "Milk", minShelfLife: 7, maxShelfLife: 10 },
-  { class: "Dairy & Eggs", subClass: "Yogurt", minShelfLife: 7, maxShelfLife: 14 },
-  { class: "Dairy & Eggs", subClass: "Cheese", minShelfLife: 14, maxShelfLife: 60 },
-  { class: "Dairy & Eggs", subClass: "Eggs", minShelfLife: 21, maxShelfLife: 30 },
-  { class: "Bakery & Bread", subClass: "Bread (Sliced, Rolls)", minShelfLife: 5, maxShelfLife: 7 },
-  { class: "Bakery & Bread", subClass: "Pastries & Desserts", minShelfLife: 2, maxShelfLife: 5 },
-  { class: "Bakery & Bread", subClass: "Bagels", minShelfLife: 5, maxShelfLife: 7 },
-  { class: "Pantry", subClass: "Canned Goods", minShelfLife: 365, maxShelfLife: 365 },
-  { class: "Pantry", subClass: "Pasta", minShelfLife: 365, maxShelfLife: 365 },
-  { class: "Pantry", subClass: "Rice", minShelfLife: 365, maxShelfLife: 365 },
-  { class: "Pantry", subClass: "Spices", minShelfLife: 365, maxShelfLife: 365 },
-  { class: "Meat & Seafood", subClass: "Fresh Meat (Beef, Chicken, Pork)", minShelfLife: 1, maxShelfLife: 5 },
-  { class: "Meat & Seafood", subClass: "Fresh Seafood", minShelfLife: 1, maxShelfLife: 3 },
-  { class: "Meat & Seafood", subClass: "Processed Meats (Sausages, Deli)", minShelfLife: 5, maxShelfLife: 7 },
-  { class: "Meat & Seafood", subClass: "Frozen Meat & Seafood", minShelfLife: 90, maxShelfLife: 365 },
-  { class: "Frozen Foods", subClass: "Frozen Vegetables", minShelfLife: 365, maxShelfLife: 365 },
-  { class: "Frozen Foods", subClass: "Ice Cream", minShelfLife: 60, maxShelfLife: 180 },
-  { class: "Frozen Foods", subClass: "Frozen Meals", minShelfLife: 180, maxShelfLife: 365 }
-];
-
-function findShelfLife(itemName) {
-  const item = shelfLifeData.find(data => itemName.includes(data.subClass));
-  return item ? { minShelfLife: item.minShelfLife, maxShelfLife: item.maxShelfLife } : null;
+// Function to parse the CSV file
+function parseShelfLifeCSV() {
+  return new Promise((resolve, reject) => {
+    fetch(chrome.runtime.getURL('shelf-life-reference.csv'))
+      .then(response => response.text())
+      .then(csvText => {
+        Papa.parse(csvText, {
+          header: true,
+          complete: results => {
+            shelfLifeData = results.data;
+            console.log('Shelf life data loaded:', shelfLifeData);
+            resolve(shelfLifeData);
+          },
+          error: err => {
+            console.error('Error parsing CSV:', err);
+            reject(err);
+          }
+        });
+      });
+  });
 }
 
-function setReminder(itemName, shelfLife, token) {
+// Function to find shelf life and classification codes for an item
+function findItemDetails(itemName) {
+  const item = shelfLifeData.find(data => itemName.includes(data['Class C']));
+  if (item) {
+    return {
+      classA: item['Class A'],
+      codeA: item['A-Code'],
+      classB: item['Class B'],
+      codeB: item['B-Code'],
+      classC: item['Class C'],
+      codeC: item['C-Code'],
+      minShelfLife: parseInt(item['Minimum Shelf Life (Days)'], 10),
+      maxShelfLife: parseInt(item['Maximum Shelf Life (Days)'], 10),
+    };
+  }
+  return null;
+}
+
+function setReminder(itemDetails, token) {
   const purchaseDate = new Date();
   const expirationDate = new Date(purchaseDate);
-  expirationDate.setDate(purchaseDate.getDate() + shelfLife.minShelfLife);
+  expirationDate.setDate(purchaseDate.getDate() + itemDetails.minShelfLife);
 
   const task = {
-    title: `Consume ${itemName}`,
+    title: `Reminder to consume ${itemDetails.classC}`,
+    notes: `Item: ${itemDetails.classC}\nClass A: ${itemDetails.classA} (Code: ${itemDetails.codeA})\nClass B: ${itemDetails.classB} (Code: ${itemDetails.codeB})\nClass C: ${itemDetails.classC} (Code: ${itemDetails.codeC})\nExpires on: ${expirationDate.toDateString()}`,
     due: expirationDate.toISOString()
   };
 
@@ -69,16 +79,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return;
       }
 
-      cartItems.forEach(item => {
-        const shelfLife = findShelfLife(item);
-        if (shelfLife) {
-          setReminder(item, shelfLife, token);
-        } else {
-          console.log(`No shelf life data found for ${item}`);
-        }
-      });
+      parseShelfLifeCSV().then(() => {
+        cartItems.forEach(item => {
+          const itemDetails = findItemDetails(item);
+          if (itemDetails) {
+            setReminder(itemDetails, token);
+          } else {
+            console.log(`No shelf life data found for ${item}`);
+          }
+        });
 
-      sendResponse({ success: true });
+        sendResponse({ success: true });
+      });
     });
 
     return true; // Keeps the message channel open for async sendResponse

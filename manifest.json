@@ -14,7 +14,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.heb.com/cart*"],
+      "matches": ["https://www.heb.com/*"],
       "js": ["content.js"]
     }
   ],
