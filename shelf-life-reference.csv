@@ -1,44 +1,44 @@
-Class A,A-Code,Class B,B-Code,Class C,C-Code,Minimum Shelf Life,Maximum Shelf Life
-Fruit & vegetables,490020,Fruit,490082,Apples,490332,,
-Fruit & vegetables,490020,Fruit,490082,Bananas,490333,,
-Fruit & vegetables,490020,Fruit,490082,Berries & Cherries,490334,,
-Fruit & vegetables,490020,Fruit,490082,Citrus,490335,,
-Fruit & vegetables,490020,Fruit,490082,Grapes,490336,,
-Fruit & vegetables,490020,Fruit,490082,"Melons (Watermelon, Cantaloupe)",490337,,
-Fruit & vegetables,490020,Fruit,490082,"Peaches, Plums & Apricots",490339,,
-Fruit & vegetables,490020,Fruit,490082,Pears,490340,,
-Fruit & vegetables,490020,Fruit,490082,Specialty & tropical,490341,,
-Fruit & vegetables,490020,Vegetables,490083,Lettuce & leafy greens,490349,,
-Fruit & vegetables,490020,Vegetables,490083,"Broccoli, cauliflower & cabbage",490345,,
-Fruit & vegetables,490020,Vegetables,490083,Celery & cucumbers,490346,,
-Fruit & vegetables,490020,Vegetables,490083,Corn,490347,,
-Fruit & vegetables,490020,Vegetables,490083,Herbs,490348,,
-Fruit & vegetables,490020,Vegetables,490083,Mixed Veggies,490350,,
-Fruit & vegetables,490020,Vegetables,490083,Mushrooms,490351,,
-Fruit & vegetables,490020,Vegetables,490083,Onions & garlic,490353,,
-Fruit & vegetables,490020,Vegetables,490083,Peppers,490354,,
-Fruit & vegetables,490020,Vegetables,490083,Potatoes & carrots,490355,,
-Fruit & vegetables,490020,Vegetables,490083,Specialty & Asian,490356,,
-Fruit & vegetables,490020,Vegetables,490083,Squash & pumpkins,490357,,
-Fruit & vegetables,490020,Vegetables,490083,Tomatoes,490358,,
-Bakery & bread,490014,,,,,,
-Dairy & eggs,490016,Milk,490053,,,,
-Dairy & eggs,490016,Biscuit & cookie dough,490047,,,,
-Dairy & eggs,490016,Butter & margarine,490048,,,,
-Dairy & eggs,490016,Cheese,490049,,,,
-Dairy & eggs,490016,Cottage Cheese,490050,,,,
-Dairy & eggs,490016,Cream,490051,,,,
-Dairy & eggs,490016,Eggs & egg substitutes,490052,,,,
-Dairy & eggs,490016,Pudding & gelatin,490054,,,,
-Dairy & eggs,490016,Sour cream,490055,,,,
-Dairy & eggs,490016,Yogurt,490056,,,,
-Meat & seafood,490023,Meat,490110,,,,
-Meat & seafood,490023,Seafood,490111,,,,
-Meat & seafood,490023,Tofu & meat alternatives,490023,,,,
-Deli & prepared food,490017,Cheese,490057,,,,
-Deli & prepared food,490017,Dip,490058,,,,
-Deli & prepared food,490017,Meat,490059,,,,
-Deli & prepared food,490017,Party trays,490060,,,,
-Deli & prepared food,490017,Ready meals & snacks,490061,,,,
-Pantry,490024,,,,,,
-Frozen Foods,490019,,,,,,
+Class A,A-Code,Class B,B-Code,Class C,C-Code,Minimum Shelf Life (Days),Maximum Shelf Life (Days)
+Fruit & vegetables,490020,Fruit,490082,Apples,490332,30,60
+Fruit & vegetables,490020,Fruit,490082,Bananas,490333,5,7
+Fruit & vegetables,490020,Fruit,490082,Berries & Cherries,490334,3,7
+Fruit & vegetables,490020,Fruit,490082,Citrus,490335,14,30
+Fruit & vegetables,490020,Fruit,490082,Grapes,490336,7,14
+Fruit & vegetables,490020,Fruit,490082,"Melons (Watermelon, Cantaloupe)",490337,7,14
+Fruit & vegetables,490020,Fruit,490082,"Peaches, Plums & Apricots",490339,5,10
+Fruit & vegetables,490020,Fruit,490082,Pears,490340,7,14
+Fruit & vegetables,490020,Fruit,490082,Specialty & tropical,490341,5,10
+Fruit & vegetables,490020,Vegetables,490083,Lettuce & leafy greens,490349,3,5
+Fruit & vegetables,490020,Vegetables,490083,"Broccoli, cauliflower & cabbage",490345,7,14
+Fruit & vegetables,490020,Vegetables,490083,Celery & cucumbers,490346,7,10
+Fruit & vegetables,490020,Vegetables,490083,Corn,490347,5,7
+Fruit & vegetables,490020,Vegetables,490083,Herbs,490348,7,10
+Fruit & vegetables,490020,Vegetables,490083,Mixed Veggies,490350,7,10
+Fruit & vegetables,490020,Vegetables,490083,Mushrooms,490351,5,7
+Fruit & vegetables,490020,Vegetables,490083,Onions & garlic,490353,30,60
+Fruit & vegetables,490020,Vegetables,490083,Peppers,490354,7,14
+Fruit & vegetables,490020,Vegetables,490083,Potatoes & carrots,490355,30,60
+Fruit & vegetables,490020,Vegetables,490083,Specialty & Asian,490356,7,14
+Fruit & vegetables,490020,Vegetables,490083,Squash & pumpkins,490357,30,60
+Fruit & vegetables,490020,Vegetables,490083,Tomatoes,490358,7,10
+Bakery & bread,490014,,,,,3,7
+Dairy & eggs,490016,Milk,490053,,,7,10
+Dairy & eggs,490016,Biscuit & cookie dough,490047,,,7,14
+Dairy & eggs,490016,Butter & margarine,490048,,,30,90
+Dairy & eggs,490016,Cheese,490049,,,14,60
+Dairy & eggs,490016,Cottage Cheese,490050,,,7,14
+Dairy & eggs,490016,Cream,490051,,,7,10
+Dairy & eggs,490016,Eggs & egg substitutes,490052,,,21,30
+Dairy & eggs,490016,Pudding & gelatin,490054,,,14,30
+Dairy & eggs,490016,Sour cream,490055,,,7,14
+Dairy & eggs,490016,Yogurt,490056,,,7,14
+Meat & seafood,490023,Meat,490110,,,1,5
+Meat & seafood,490023,Seafood,490111,,,1,3
+Meat & seafood,490023,Tofu & meat alternatives,490023,,,5,7
+Deli & prepared food,490017,Cheese,490057,,,14,60
+Deli & prepared food,490017,Dip,490058,,,7,14
+Deli & prepared food,490017,Meat,490059,,,5,7
+Deli & prepared food,490017,Party trays,490060,,,2,3
+Deli & prepared food,490017,Ready meals & snacks,490061,,,3,5
+Pantry,490024,,,,,365,365
+Frozen Foods,490019,,,,,365,365

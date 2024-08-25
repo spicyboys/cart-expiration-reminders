@@ -3,7 +3,6 @@
 let cartItems = [];
 let shelfLifeData = [];
 
-// Function to parse the CSV file
 function parseShelfLifeCSV() {
   return new Promise((resolve, reject) => {
     fetch(chrome.runtime.getURL('shelf-life-reference.csv'))
@@ -25,7 +24,6 @@ function parseShelfLifeCSV() {
   });
 }
 
-// Function to find shelf life and classification codes for an item
 function findItemDetails(itemName) {
   const item = shelfLifeData.find(data => itemName.includes(data['Class C']));
   if (item) {
@@ -81,11 +79,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       parseShelfLifeCSV().then(() => {
         cartItems.forEach(item => {
-          const itemDetails = findItemDetails(item);
+          const itemDetails = findItemDetails(item.name);  // Adjusted to use item.name
           if (itemDetails) {
             setReminder(itemDetails, token);
           } else {
-            console.log(`No shelf life data found for ${item}`);
+            console.log(`No shelf life data found for ${item.name}`);
           }
         });
 
@@ -94,5 +92,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
 
     return true; // Keeps the message channel open for async sendResponse
+  } else if (request.action === 'getCartItems') {
+    console.log('Returning cart items:', cartItems);
+    sendResponse({ items: cartItems });
   }
 });
