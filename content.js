@@ -9,33 +9,49 @@ function collectCartItems() {
         console.log('Cart container found:', cartContainer);
 
         // Now find the specific item elements within the broader container
-        const itemElements = cartContainer.querySelectorAll('.sc-1397b7ba-3');
+        const itemElements = cartContainer.querySelectorAll('.sc-1397b7ba-3.eEJuBM');
 
         console.log('Number of elements:', itemElements.length);
 
         const items = [];
         itemElements.forEach(item => {
-            const label = item.querySelector('#item-label');
+            console.log("Item: " + item.)
+            const label = item.querySelector('.sc-c12c6e5f-0 XtKnf');
+            console.log("About to start converting them!")
             if (label) {
                 const itemName = label.textContent.trim();
-                const itemUrl = item.closest('a') ? item.closest('a').href : '';  // Get the URL if it exists
+                const itemUrl = item.closest('a') ? item.closest('a').href : '';  // Get the URL of the product page
 
-                items.push({
-                    name: itemName,
-                    url: itemUrl
+                console.log("About to start converting them!")
+                // Find item details from the shelf life data
+                chrome.runtime.sendMessage({ action: 'getItemDetails', name: itemName }, function(response) {
+                    const itemDetails = response.itemDetails || {};
+                    console.log("Loop <3")
+                    items.push({
+                        "class-A": itemDetails.classA || 'Unknown',
+                        "a-code": itemDetails.codeA || 'Unknown',
+                        "class-B": itemDetails.classB || 'Unknown',
+                        "b-code": itemDetails.codeB || 'Unknown',
+                        "class-C": itemDetails.classC || 'Unknown',
+                        "c-code": itemDetails.codeC || 'Unknown',
+                        "min-shelf-life": itemDetails.minShelfLife || 'Unknown',
+                        "max-shelf-life": itemDetails.maxShelfLife || 'Unknown',
+                        "product-page": itemUrl
+                    });
+
+                    // After collecting all items, send them to the background script
+                    if (items.length === itemElements.length) {
+                        chrome.runtime.sendMessage({ action: 'updateCartItems', items: items }, function(response) {
+                            console.log('Items sent to background script:', response);
+                        });
+                    }
                 });
             }
         });
 
-        console.log('Items collected:', items);
-
         if (items.length === 0) {
             console.warn('No items were found. Check if the selectors match the structure of the cart page.');
         }
-
-        chrome.runtime.sendMessage({ action: 'updateCartItems', items: items }, function(response) {
-            console.log('Items sent to background script:', response);
-        });
     } else {
         console.warn('Cart container not found. The selectors may need adjustment.');
     }
