@@ -2,24 +2,48 @@
 
 // Function to collect items from the cart
 function collectCartItems() {
-    const itemElements = document.querySelectorAll('a.sc-b8625da9-2.dlduhl');
-    
-    console.log('Collecting cart items...');
-    const items = Array.from(itemElements).map(item => {
-        return {
-            name: item.textContent.trim(),
-            url: item.href
-        };
-    });
-    console.log('Items to send to background script:', items);
+    // Ensure we select the broader parent container for the items
+    const cartContainer = document.querySelector('body');  // Starting from the body to ensure we are within the document
 
-    // Send the items back to the background script
-    chrome.runtime.sendMessage({ action: 'updateCartItems', items: items });
+    if (cartContainer) {
+        console.log('Cart container found:', cartContainer);
+
+        // Now find the specific item elements within the broader container
+        const itemElements = cartContainer.querySelectorAll('.sc-1397b7ba-3');
+
+        console.log('Number of elements:', itemElements.length);
+
+        const items = [];
+        itemElements.forEach(item => {
+            const label = item.querySelector('#item-label');
+            if (label) {
+                const itemName = label.textContent.trim();
+                const itemUrl = item.closest('a') ? item.closest('a').href : '';  // Get the URL if it exists
+
+                items.push({
+                    name: itemName,
+                    url: itemUrl
+                });
+            }
+        });
+
+        console.log('Items collected:', items);
+
+        if (items.length === 0) {
+            console.warn('No items were found. Check if the selectors match the structure of the cart page.');
+        }
+
+        chrome.runtime.sendMessage({ action: 'updateCartItems', items: items }, function(response) {
+            console.log('Items sent to background script:', response);
+        });
+    } else {
+        console.warn('Cart container not found. The selectors may need adjustment.');
+    }
 }
 
 // Function to observe changes in the cart
 function observeCartChanges() {
-    const cartContainer = document.querySelector('div'); // Adjust selector as necessary for the main cart container
+    const cartContainer = document.querySelector('body');  // Start with a broad selector
 
     if (cartContainer) {
         const observer = new MutationObserver(() => {
@@ -34,39 +58,9 @@ function observeCartChanges() {
     }
 }
 
-// Function to scrape product page for classification codes
-function scrapeProductPage(url, callback) {
-    fetch(url)
-      .then(response => response.text())
-      .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          
-          // Scrape the necessary data from the product page
-          const classA = doc.querySelector('.breadcrumb .class-a').textContent.trim();
-          const codeA = doc.querySelector('.breadcrumb .code-a').textContent.trim();
-          const classB = doc.querySelector('.breadcrumb .class-b').textContent.trim();
-          const codeB = doc.querySelector('.breadcrumb .code-b').textContent.trim();
-          const classC = doc.querySelector('.breadcrumb .class-c').textContent.trim();
-          const codeC = doc.querySelector('.breadcrumb .code-c').textContent.trim();
-          
-          callback({
-              classA,
-              codeA,
-              classB,
-              codeB,
-              classC,
-              codeC
-          });
-      })
-      .catch(error => {
-          console.error('Error scraping product page:', error);
-          callback(null);
-      });
-}
-
-// Run the function after the page is fully loaded
+// Run the collection and observation when the page is fully loaded
 window.addEventListener('load', () => {
+    console.log('Page loaded, starting item collection...');
     collectCartItems(); // Initial collection
     observeCartChanges(); // Set up observer for dynamic updates
 });

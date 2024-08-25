@@ -69,6 +69,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'updateCartItems') {
     cartItems = request.items;
     console.log('Cart items received and stored in background.js:', cartItems);
+    sendResponse({ status: 'Items received' });
   } else if (request.action === 'setReminders') {
     chrome.identity.getAuthToken({ interactive: true }, function(token) {
       if (chrome.runtime.lastError) {
